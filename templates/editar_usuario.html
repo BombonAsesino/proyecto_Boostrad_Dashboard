@@ -1,0 +1,91 @@
+{% extends 'baseadmin.html' %}
+{% block title %}Editar Usuario{% endblock %}
+{% block body %}
+
+<div class="container my-5" style="max-width: 700px;">
+
+  <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+    <div class="card-header text-white fw-semibold"
+         style="background: linear-gradient(135deg, #007bff, #00bcd4); border-radius: 1rem 1rem 0 0;">
+      <i class="bi bi-person-gear me-2"></i>Editar Usuario
+    </div>
+
+    <form method="post" class="card-body p-4">
+
+      <!-- Nombre -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Nombre</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input name="nombre" type="text" class="form-control form-control-lg"
+                 value="{{ user.nombre or '' }}" placeholder="Nombre completo"
+                 data-bs-toggle="tooltip" data-bs-placement="top" title="Actualiza el nombre del usuario">
+        </div>
+      </div>
+
+      <!-- Correo -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Correo</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+          <input name="email" type="email" class="form-control form-control-lg"
+                 value="{{ user.email }}" placeholder="usuario@correo.com"
+                 data-bs-toggle="tooltip" data-bs-placement="top" title="Correo electrónico del usuario">
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Contraseña</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input name="password" type="password" id="password" class="form-control form-control-lg"
+                 value="{{ user.password }}" placeholder="Nueva contraseña"
+                 data-bs-toggle="tooltip" data-bs-placement="top" title="Define una nueva contraseña o deja la actual">
+          <button class="btn btn-outline-secondary" type="button" id="togglePass"
+                  data-bs-toggle="tooltip" title="Mostrar/Ocultar contraseña">
+            <i class="bi bi-eye-slash" id="toggleIcon"></i>
+          </button>
+        </div>
+        <div class="form-text text-muted">
+          <i class="bi bi-shield-lock"></i>
+          Mantén esta información segura.
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-end gap-2">
+        <a class="btn btn-outline-secondary" href="{{ url_for('listar') }}"
+           data-bs-toggle="tooltip" title="Cancelar y volver a la lista">
+          Cancelar
+        </a>
+        <button class="btn text-white fw-bold"
+                style="background: linear-gradient(135deg, #007bff, #00bcd4); border: none;"
+                type="submit" data-bs-toggle="tooltip" title="Guardar cambios">
+          Guardar Cambios
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
+<!-- Toggle password -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const pass = document.getElementById('password');
+    const btn = document.getElementById('togglePass');
+    const icon = document.getElementById('toggleIcon');
+    if (pass && btn) {
+      btn.addEventListener('click', () => {
+        const isPass = pass.getAttribute('type') === 'password';
+        pass.setAttribute('type', isPass ? 'text' : 'password');
+        icon.classList.toggle('bi-eye');
+        icon.classList.toggle('bi-eye-slash');
+      });
+    }
+  });
+</script>
+
+{% endblock %}

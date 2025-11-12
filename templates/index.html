@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Inicio{% endblock %}
+
+{% block contenido %}
+
+
+
+<!-- Carousel -->
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{{ url_for('static', filename='imagen1.jpg') }}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='imagen2.jpg') }}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='imagen3.jpg') }}" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+    <span class="visually-hidden">Siguiente</span>
+  </button>
+</div>
+
+<!-- Información -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4">INFORMACIÓN</h2>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">ROLEX</h5>
+          <p class="card-text">Rolex representa la excelencia suiza: precisión certificada, materiales de la más alta calidad y diseños icónicos como Submariner, Datejust y Day-Date. Cada pieza combina robustez y elegancia atemporal con la hermeticidad Oyster y movimientos propios certificados Superlative Chronometer, convirtiéndola en una inversión segura y un símbolo de estatus reconocido en todo el mundo.</p>
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Richard Mille</h5>
+          <p class="card-text">Richard Mille redefine la relojería de lujo con ingeniería extrema y estética vanguardista. Sus cajas en Carbon TPT®, titanio grado 5 y movimientos esqueletados inspirados en la F1 logran ligereza, resistencia y desempeño excepcionales. Ediciones limitadas, mecanismos de alto rendimiento y diseño futurista lo convierten en la elección de quienes buscan exclusividad absoluta.</p>
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Patek Philippe</h5>
+          <p class="card-text">
+Patek Philippe es sinónimo de haute horlogerie: acabados artesanales, complicaciones refinadas y un legado familiar único. Modelos como Calatrava, Nautilus y Grand Complications destacan por su elegancia sutil y valor perdurable. Cada reloj es una obra maestra hecha para trascender generaciones con precisión, prestigio y un estándar de calidad incomparable.</p>
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Servicios -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Modelos</h2>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{{ url_for('static', filename='Submariner.jpg') }}" class="card-img-top" alt="Web">
+        <div class="card-body">
+          <h5 class="card-title">Submariner</h5>
+          <p class="card-text">El Rolex Submariner es un reloj de buceo icónico, lanzado en 1953, que combina robustez, precisión y un diseño atemporal. Resistente al agua hasta 300 metros, integra el sistema Oyster y el bisel giratorio unidireccional para mayor seguridad bajo el mar. Su estilo versátil lo convierte en una pieza tanto profesional como elegante para el uso diario.</p>
+          <a href="#" class="btn btn-primary">Ver más</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{{ url_for('static', filename='tourbillon.jpg') }}" class="card-img-top" alt="Productos">
+        <div class="card-body">
+          <h5 class="card-title">Tourbillon</h5>
+          <p class="card-text">El Richard Mille Tourbillon es una obra maestra de la relojería moderna que combina ingeniería extrema con diseño futurista. Fabricado con materiales innovadores como titanio o Carbon TPT®, integra el mecanismo tourbillon para garantizar una precisión excepcional. Su exclusividad y estética vanguardista lo convierten en un símbolo de lujo y alto rendimiento.
+          </p>
+          <a href="#" class="btn btn-primary">Ver más</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{{ url_for('static', filename='nautilus.jpg') }}" class="card-img-top" alt="Cursos">
+        <div class="card-body">
+          <h5 class="card-title">Nautilus</h5>
+          <p class="card-text">El Patek Philippe Nautilus es uno de los relojes deportivos de lujo más emblemáticos del mundo, reconocido por su distintiva caja en forma de “ojo de buey” y su elegancia atemporal. Combina un diseño sofisticado con un alto nivel de precisión mecánica y acabados artesanales excepcionales. Su exclusividad lo convierte en una pieza muy apreciada por coleccionistas y amantes de la alta relojería.</p>
+          <a href="#" class="btn btn-primary">Ver más</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

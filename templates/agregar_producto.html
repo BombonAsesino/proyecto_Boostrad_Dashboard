@@ -1,0 +1,230 @@
+{% extends "baseadmin.html" %}
+{% block title %}{{ 'Editar Producto' if editar else 'Agregar Producto' }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+
+  {% if editar %}
+  <!-- ===================== SOLO FORMULARIO (MODO EDICIÓN) ===================== -->
+  <div class="row justify-content-start">
+    <div class="col-12 col-lg-6 col-xl-5">
+      <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+        <div class="card-header text-white fw-semibold"
+             style="background: linear-gradient(135deg, #007bff, #00bcd4); border-radius: 1rem 1rem 0 0;">
+          <i class="bi bi-pencil-square me-2"></i>Editar Producto
+        </div>
+        <div class="card-body">
+          <form method="POST" action="{{ url_for('editar_producto', id=prod.id) }}" class="needs-validation" novalidate>
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Nombre del Producto</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                <input type="text" name="nombre" class="form-control" value="{{ prod.nombre }}" required
+                       placeholder="Ej.: Aceite 10W-40"
+                       data-bs-toggle="tooltip" title="Nombre comercial del producto">
+                <div class="invalid-feedback">Ingresa el nombre del producto.</div>
+              </div>
+            </div>
+
+            <!-- Precio -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Precio</label>
+              <div class="input-group">
+                <span class="input-group-text">C$</span>
+                <input type="number" step="0.01" name="precio" class="form-control" value="{{ prod.precio }}" required
+                       placeholder="0.00"
+                       data-bs-toggle="tooltip" title="Precio unitario (córdobas)">
+                <div class="invalid-feedback">Ingresa un precio válido.</div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Descripción</label>
+              <textarea name="descripcion" rows="4" class="form-control"
+                        placeholder="Detalle breve del producto"
+                        data-bs-toggle="tooltip" title="Descripción opcional">{{ prod.descripcion or '' }}</textarea>
+            </div>
+
+            <!-- Fecha -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Fecha</label>
+              <input type="date" name="fecha" class="form-control"
+                     value="{{ (prod.fecha.strftime('%Y-%m-%d') if prod.fecha and prod.fecha.__class__.__name__ != 'str' else (prod.fecha[:10] if prod.fecha else '')) }}"
+                     data-bs-toggle="tooltip" title="Actualizar fecha (opcional)">
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end">
+              <a href="{{ url_for('listar_productos') }}" class="btn btn-outline-secondary"
+                 data-bs-toggle="tooltip" title="Volver sin guardar">Cancelar</a>
+              <button type="submit" class="btn text-white fw-bold"
+                      style="background: linear-gradient(135deg, #007bff, #00bcd4); border: none;"
+                      data-bs-toggle="tooltip" title="Actualizar información">
+                Actualizar Producto
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+  <!-- ===================== FORMULARIO + LISTA (MODO AGREGAR) ===================== -->
+  <div class="row g-4">
+    <!-- Form -->
+    <div class="col-12 col-lg-5">
+      <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+        <div class="card-header text-white fw-semibold"
+             style="background: linear-gradient(135deg, #177af3, #3c4ff3); border-radius: 1rem 1rem 0 0;">
+          <i class="bi bi-plus-circle me-2"></i>Agregar Producto
+        </div>
+        <div class="card-body">
+          <form method="POST" action="{{ url_for('listar_productos_agregados') }}" class="needs-validation" novalidate>
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Nombre del Producto</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                <input type="text" name="nombre" class="form-control" required
+                       placeholder="Ej.: Concentrado porcino 18%"
+                       data-bs-toggle="tooltip" title="Nombre comercial del producto" autofocus>
+                <div class="invalid-feedback">Ingresa el nombre del producto.</div>
+              </div>
+            </div>
+
+            <!-- Precio -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Precio</label>
+              <div class="input-group">
+                <span class="input-group-text">C$</span>
+                <input type="number" step="0.01" name="precio" class="form-control" required
+                       placeholder="0.00"
+                       data-bs-toggle="tooltip" title="Precio unitario (córdobas)">
+                <div class="invalid-feedback">Ingresa un precio válido.</div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Descripción</label>
+              <textarea name="descripcion" rows="4" class="form-control"
+                        placeholder="Detalle breve del producto (presentación, unidad, etc.)"
+                        data-bs-toggle="tooltip" title="Descripción opcional"></textarea>
+            </div>
+
+            <!-- Fecha -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Fecha</label>
+              <input type="date" name="fecha" class="form-control"
+                     data-bs-toggle="tooltip" title="Fecha del producto (opcional)">
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn text-white fw-bold"
+                      style="background: linear-gradient(135deg, #177af3, #3c4ff3); border: none;"
+                      data-bs-toggle="tooltip" title="Guardar producto">
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <div class="col-12 col-lg-7">
+      <div class="card shadow-sm border-0">
+        <div class="card-header fw-bold">
+          <i class="bi bi-box-seam me-2"></i>Lista de Productos
+          <span class="badge text-bg-secondary ms-2"
+                data-bs-toggle="tooltip" title="Total cargado en la vista">
+            {{ productos|length if productos else 0 }}
+          </span>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover m-0 align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width:80px;">ID</th>
+                  <th>Nombre</th>
+                  <th style="width:140px;">Precio</th>
+                  <th>Descripción</th>
+                  <th style="width:140px;">Fecha</th>
+                  <th style="width:150px;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if productos and productos|length %}
+                  {% for p in productos %}
+                  <tr>
+                    <td>{{ p.id }}</td>
+                    <td data-bs-toggle="tooltip" title="Nombre del producto">{{ p.nombre }}</td>
+                    <td data-bs-toggle="tooltip" title="Precio unitario">C$ {{ '%.2f'|format(p.precio|float) }}</td>
+                    <td class="text-muted">{{ p.descripcion }}</td>
+                    <td data-bs-toggle="tooltip" title="Fecha registrada">
+                      {{ (p.fecha.strftime('%Y-%m-%d') if p.fecha and p.fecha.__class__.__name__ != 'str' else (p.fecha[:10] if p.fecha else '')) }}
+                    </td>
+                    <td class="text-nowrap d-flex gap-2">
+                      <a href="{{ url_for('editar_producto', id=p.id) }}"
+                         class="btn btn-sm btn-success"
+                         data-bs-toggle="tooltip" title="Editar">
+                        <i class="bi bi-pencil-square"></i>
+                      </a>
+                      <button class="btn btn-sm btn-danger"
+                              data-url="{{ url_for('eliminar_producto', id=p.id) }}"
+                              onclick="confirmarEliminacion(this.dataset.url)"
+                              data-bs-toggle="tooltip" title="Eliminar">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Sin productos</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Validación y tooltips (por si tu base ya no los inicializa) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const triggers = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    triggers.forEach(el => new bootstrap.Tooltip(el));
+
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', ev => {
+        if (!form.checkValidity()) { ev.preventDefault(); ev.stopPropagation(); }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  });
+</script>
+
+<!-- SweetAlert2 para eliminar -->
+<script>
+  function confirmarEliminacion(url) {
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(r => { if (r.isConfirmed) window.location.href = url; });
+  }
+</script>
+{% endblock %}

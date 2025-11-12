@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Contactos{% endblock %}
+
+{% block contenido %}
+
+
+<!-- Banner -->
+<div class="container mt-5">
+  <div class="text-center">
+    <img src="{{ url_for('static', filename='contact_banner.jpg') }}" 
+         class="img-fluid rounded shadow-sm mb-4" 
+         alt="AkiraCode Academy - Contacto" 
+         style="max-height: 80px; object-fit: cover;">
+  </div>
+  <h2 class="text-center mb-3">Contactanos Propietario Jasmir Tellez</h2>
+  <p class="text-center text-muted">
+    En <strong>Relogeria Tellez</strong> estamos comprometidos contigo.
+     Si buscas relojes exclusivos, necesitas asesoría en tu compra o simplemente deseas conocer más de nuestras colecciones, 
+     no dudes en contactarnos. Nuestro equipo estará encantado de atenderte con la seriedad, confianza y dedicación que mereces.
+  </p>
+</div>
+
+<!-- Contacto + Formulario -->
+<div class="container mt-5 mb-5">
+  <div class="row g-4 align-items-stretch">
+
+    <!-- Información de contacto -->
+    <div class="col-md-5">
+      <div class="card h-100 shadow-lg border-0 rounded-3 bg-light">
+        <div class="card-body p-4">
+          <h4 class="card-title mb-4">Información de Contacto</h4>
+          <p class="text-muted">Puedes ocupar los siguientes medios para contactarnos:</p>
+          <ul class="list-unstyled">
+            <li class="mb-3">
+              <i class="bi bi-envelope-fill text-primary"></i>
+              <strong> Email:</strong> Relogeriatellez533@gmail.com
+            </li>
+            <li class="mb-3">
+              <i class="bi bi-telephone-fill text-primary"></i>
+              <strong> Ubicación:</strong> KlMtr 91 Carretera al Rama frente al puesto de Agua
+            </li>
+            <li class="mb-3">
+              <i class="bi bi-geo-alt-fill text-primary"></i>
+              <strong> Celular:</strong> 00240024
+            </li>
+          </ul>
+          <p class="small text-muted">Estamos atendiendo: Sabados y Domingos, Las 24 horas del dia</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="col-md-7">
+      <div class="card h-100 shadow-lg border-0 rounded-3">
+        <div class="card-body p-4">
+          <h4 class="card-title text-center mb-4">Escríbenos </h4>
+          <form id="contactForm" action="" method="post" novalidate>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" 
+                     placeholder="Tu nombre completo" required>
+              <div class="invalid-feedback">Por favor ingresa tu nombre.</div>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="email" name="email" 
+                     placeholder="ejemplo@gmail.com" required>
+              <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
+            </div>
+            <div class="mb-3">
+              <label for="mensaje" class="form-label">Mensaje</label>
+              <textarea class="form-control" id="mensaje" name="mensaje" rows="4" 
+                        placeholder="Escribe tu mensaje aquí..." required></textarea>
+              <div class="invalid-feedback">El mensaje no puede estar vacío.</div>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-send-fill"></i> Enviar Mensaje
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast flotante -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+  <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ ¡Mensaje enviado correctamente! Gracias por contactarnos.
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<!-- JS: Validación + Toast -->
+<script>
+  (function () {
+    'use strict'
+    const form = document.getElementById('contactForm');
+    const toastEl = document.getElementById('successToast');
+    const toast = new bootstrap.Toast(toastEl);
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (form.checkValidity()) {
+        // Mostrar toast de éxito
+        toast.show();
+        form.reset();
+        form.classList.remove('was-validated');
+      } else {
+        form.classList.add('was-validated');
+      }
+    }, false)
+  })()
+</script>
+
+{% endblock %}

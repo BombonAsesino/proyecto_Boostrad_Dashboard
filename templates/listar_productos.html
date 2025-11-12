@@ -1,0 +1,120 @@
+{% extends 'baseadmin.html' %}
+{% block title %}Lista de Productos{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="m-0 d-flex align-items-center gap-2">
+      Lista de Productos
+      <span class="badge text-bg-secondary"
+            data-bs-toggle="tooltip" title="Total de productos cargados">
+        {{ productos|length }}
+      </span>
+    </h2>
+
+    <a href="{{ url_for('export_productos_csv') }}"
+       class="btn btn-outline-primary"
+       data-bs-toggle="tooltip" title="Descargar listado en CSV">
+      <i class="bi bi-download"></i> Exportar
+    </a>
+  </div>
+
+  <!-- Tabla -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table id="tablaProductos" class="table table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th style="width:60px;">ID</th>
+              <th>Nombre</th>
+              <th style="width:120px;">Precio</th>
+              <th>Descripción</th>
+              <th style="width:140px;">Fecha</th>
+              <th style="width:150px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in productos %}
+            <tr>
+              <td>{{ p.id }}</td>
+              <td data-bs-toggle="tooltip" title="Nombre del producto">{{ p.nombre }}</td>
+              <td data-bs-toggle="tooltip" title="Precio unitario">
+                C$ {{ '%.2f'|format((p.precio or 0)|float) }}
+              </td>
+              <td class="text-muted">{{ p.descripcion }}</td>
+              <td data-bs-toggle="tooltip" title="Fecha registrada">
+                {{ (p.fecha.strftime('%Y-%m-%d') if p.fecha and p.fecha.__class__.__name__ != 'str' else (p.fecha[:10] if p.fecha else '')) }}
+              </td>
+              <td class="d-flex gap-2">
+                <!-- Editar -->
+                <a href="{{ url_for('editar_producto', id=p.id) }}"
+                   class="btn btn-sm btn-success"
+                   data-bs-toggle="tooltip" title="Editar producto">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+
+                <!-- Eliminar -->
+                <button class="btn btn-sm btn-danger"
+                        data-url="{{ url_for('eliminar_producto', id=p.id) }}"
+                        onclick="confirmarEliminacion(this.dataset.url)"
+                        data-bs-toggle="tooltip" title="Eliminar producto">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="6" class="text-center text-muted">No hay productos registrados.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DataTables + SweetAlert -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+    // DataTable
+    $('#tablaProductos').DataTable({
+      pageLength: 8,
+      lengthChange: false,
+      responsive: true,
+      order: [[0, 'asc']],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
+      }
+    });
+
+    // Inicializar tooltips
+    const triggers = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    triggers.forEach(el => new bootstrap.Tooltip(el));
+  });
+
+  // Confirmación con SweetAlert2
+  function confirmarEliminacion(url) {
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: "Esta acción no se puede revertir.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'baseadmin.html' %}
+{% block title %}Editar Usuario{% endblock %}
+
+{% block body %}
+<div class="container my-5" style="max-width: 680px;">
+
+  <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+    <div class="card-header text-white fw-semibold"
+         style="background: linear-gradient(135deg, #007bff, #00bcd4); border-radius: 1rem 1rem 0 0;">
+      <i class="bi bi-pencil-square me-2"></i>Editar Usuario
+    </div>
+
+    <form method="POST" class="card-body p-4">
+
+      <!-- Correo -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Correo</label>
+        <input type="email"
+               class="form-control form-control-lg"
+               value="{{ user.email }}"
+               disabled
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="El correo no se puede modificar">
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Contraseña</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input name="password" type="password" id="password"
+                 class="form-control form-control-lg"
+                 value="{{ user.password }}"
+                 placeholder="Nueva contraseña"
+                 data-bs-toggle="tooltip" data-bs-placement="top"
+                 title="Define una nueva contraseña o deja la actual">
+          <button class="btn btn-outline-secondary" type="button" id="togglePass"
+                  data-bs-toggle="tooltip" title="Mostrar u ocultar contraseña">
+            <i class="bi bi-eye-slash" id="toggleIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Rol -->
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Rol</label>
+        <select name="id_rol" class="form-select form-select-lg"
+                data-bs-toggle="tooltip" data-bs-placement="bottom"
+                title="Selecciona el nivel de permisos">
+          <option value="1" {{ "selected" if user.id_rol == 1 else "" }}>Administrador</option>
+          <option value="2" {{ "selected" if user.id_rol == 2 else "" }}>Usuario</option>
+        </select>
+      </div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-end gap-3">
+        <a class="btn btn-outline-secondary px-4"
+           href="{{ url_for('listar') }}"
+           data-bs-toggle="tooltip" title="Cancelar y volver a la lista">
+          Cancelar
+        </a>
+        <button class="btn px-4 text-white fw-bold"
+                style="background: linear-gradient(135deg, #007bff, #00bcd4); border: none;"
+                type="submit"
+                data-bs-toggle="tooltip" title="Guardar cambios">
+          Guardar Cambios
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
+<!-- Toggle password -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const pass = document.getElementById('password');
+    const btn = document.getElementById('togglePass');
+    const icon = document.getElementById('toggleIcon');
+    if (pass && btn) {
+      btn.addEventListener('click', () => {
+        const isPass = pass.getAttribute('type') === 'password';
+        pass.setAttribute('type', isPass ? 'text' : 'password');
+        icon.classList.toggle('bi-eye');
+        icon.classList.toggle('bi-eye-slash');
+      });
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'baseadmin.html' %}
+{% block title %}Perfil del Administrador{% endblock %}
+{% block body %}
+<div class="container my-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4">Perfil del Administrador</h2>
+
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <!-- Avatar del admin -->
+        <img src="{{ url_for('static', filename='img/admin.png') }}" 
+             class="rounded-circle mb-3" 
+             alt="Foto de perfil" width="150" height="150">
+      </div>
+      <div class="col-md-8">
+        <p><strong>Nombre:</strong> {{ session.get('nombre') }}</p>
+        <p><strong>Correo:</strong> admin@ventas.com</p>
+        <p><strong>Rol:</strong> Administrador</p>
+        <p><strong>Último acceso:</strong> {{ session.get('ultimo_acceso', 'No disponible') }}</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Estadísticas -->
+    <div class="row text-center mt-4">
+      <div class="col-md-6">
+        <div class="card bg-primary text-white shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Usuarios Registrados</h5>
+            <p class="display-5 fw-bold">{{ total_usuarios }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card bg-success text-white shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Productos Registrados</h5>
+            <p class="display-5 fw-bold">{{ total_productos }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 text-end">
+      <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

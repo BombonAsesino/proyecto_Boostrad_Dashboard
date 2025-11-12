@@ -1,0 +1,8 @@
+.badge-soft {
+  background: rgba(255,255,255,.85);
+  color: #111827;
+  border: 1px solid rgba(0,0,0,.06);
+  padding: .35rem .55rem;
+  border-radius: .5rem;
+  font-weight: 600;
+}

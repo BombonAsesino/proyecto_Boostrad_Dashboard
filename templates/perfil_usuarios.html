@@ -1,0 +1,226 @@
+{% extends "baseadmin.html" %}
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+
+  <!-- Título + toolbar -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <h3 class="m-0 d-flex align-items-center gap-2">
+    Lista de Usuarios
+    <span class="badge text-bg-secondary"
+          data-bs-toggle="tooltip" data-bs-placement="right"
+          title="Cantidad total cargada en esta vista">
+      {{ usuarios|length }} usuarios
+    </span>
+  </h3>
+
+  <div class="d-flex gap-2">
+    <!-- Botón Exportar -->
+    <a href="{{ url_for('export_usuarios_csv') }}"
+       class="btn btn-outline-primary"
+       data-bs-toggle="tooltip" title="Descargar listado en CSV">
+      <i class="bi bi-download"></i> Exportar
+    </a>
+
+    <!-- Botón Agregar -->
+    <button type="button" class="btn btn-success"
+            data-bs-toggle="modal" data-bs-target="#modalAddUser"
+            data-bs-toggle="tooltip" title="Agregar un nuevo usuario">
+      <i class="bi bi-person-plus"></i> Agregar
+    </button>
+
+    <!-- Botón Volver -->
+    <a href="{{ url_for('admin') }}" class="btn btn-outline-secondary"
+       data-bs-toggle="tooltip" title="Volver al panel">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+  </div>
+</div>
+
+
+  <!-- Tabla -->
+  <div class="table-responsive">
+    <table id="tablaUsuarios" class="table table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th style="width:60px;">N°</th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th style="width:140px;">Password</th>
+          <th style="width:120px;">Rol</th>
+          <th style="width:210px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td data-bs-toggle="tooltip" title="Nombre del usuario">{{ u.nombre or '—' }}</td>
+
+          <!-- Correo + copiar -->
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <span data-bs-toggle="tooltip" title="Correo del usuario">{{ u.email }}</span>
+              <button type="button" class="btn btn-sm btn-outline-secondary"
+                      onclick="navigator.clipboard.writeText('{{ u.email }}')"
+                      data-bs-toggle="tooltip" title="Copiar correo">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+          </td>
+
+          <!-- Password (oculto por seguridad) -->
+          <td>
+            <span class="text-muted" data-bs-toggle="tooltip" title="Oculto por seguridad">
+              ••••••••
+            </span>
+          </td>
+
+          <!-- Rol -->
+          <td>
+            {% if u.id_rol == 1 %}
+              <span class="badge bg-primary" data-bs-toggle="tooltip" title="Administrador">Admin</span>
+            {% else %}
+              <span class="badge bg-secondary" data-bs-toggle="tooltip" title="Usuario estándar">Usuario</span>
+            {% endif %}
+          </td>
+
+          <!-- Acciones -->
+          <td class="d-flex flex-wrap gap-2">
+            <a class="btn btn-sm btn-success"
+               href="{{ url_for('usuarios_editar', user_id=u.id) }}"
+               data-bs-toggle="tooltip" title="Editar este usuario">
+              <i class="bi bi-pencil-square"></i> Editar
+            </a>
+            <button type="button"
+                    class="btn btn-sm btn-danger"
+                    data-url="{{ url_for('usuarios_eliminar', user_id=u.id) }}"
+                    onclick="confirmarEliminacion(this.dataset.url)"
+                    data-bs-toggle="tooltip" title="Eliminar definitivamente">
+              <i class="bi bi-trash3"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted">No hay usuarios registrados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========= Modal: Agregar Usuario ========= -->
+<div class="modal fade" id="modalAddUser" tabindex="-1" aria-labelledby="modalAddUserLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+      <form method="POST" action="{{ url_for('usuarios_agregar') }}">
+        <!-- Header -->
+        <div class="modal-header text-white" style="background: linear-gradient(135deg, #007bff, #00bcd4);">
+          <h5 class="modal-title fw-bold" id="modalAddUserLabel">
+            <i class="bi bi-person-plus me-2"></i>Agregar Usuario
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body bg-light">
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary">Nombre</label>
+            <input type="text"
+                   class="form-control form-control-lg border-0 shadow-sm"
+                   name="nombre"
+                   placeholder="Ejemplo: Ana Pérez"
+                   required
+                   data-bs-toggle="tooltip" title="Nombre completo del usuario">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary">Correo</label>
+            <input type="email"
+                   class="form-control form-control-lg border-0 shadow-sm"
+                   name="email"
+                   placeholder="usuario@correo.com"
+                   required
+                   data-bs-toggle="tooltip" title="Correo válido para iniciar sesión">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary">Password</label>
+            <div class="input-group">
+              <input type="text"
+                     class="form-control form-control-lg border-0 shadow-sm"
+                     name="password"
+                     placeholder="********"
+                     required
+                     data-bs-toggle="tooltip" title="Contraseña inicial (podrá cambiarse luego)">
+              <button class="btn btn-outline-secondary" type="button"
+                      onclick="this.previousElementSibling.type = this.previousElementSibling.type==='password' ? 'text':'password';"
+                      data-bs-toggle="tooltip" title="Mostrar/Ocultar">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary">Rol</label>
+            <select name="id_rol" class="form-select form-select-lg border-0 shadow-sm"
+                    data-bs-toggle="tooltip" title="Selecciona el rol del usuario">
+              <option value="2" selected>Usuario</option>
+              <option value="1">Admin</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer d-flex justify-content-between bg-white">
+          <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal"
+                  data-bs-toggle="tooltip" title="Cerrar sin guardar">
+            Cancelar
+          </button>
+          <button type="submit" class="btn text-white px-4 fw-bold"
+                  style="background: linear-gradient(135deg, #007bff, #00bcd4); border: none;"
+                  data-bs-toggle="tooltip" title="Guardar nuevo usuario">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmar eliminación (SweetAlert2) -->
+<script>
+  function confirmarEliminacion(url) {
+    Swal.fire({
+      title: '¿Eliminar usuario?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((r) => {
+      if (r.isConfirmed) window.location.href = url;
+    });
+  }
+</script>
+
+<!-- Inicialización de DataTables -->
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const tabla = document.getElementById('tablaUsuarios');
+    if (!$.fn.DataTable.isDataTable(tabla)) {
+      $('#tablaUsuarios').DataTable({
+        pageLength: 8,
+        lengthChange: false,
+        order: [[0, 'asc']],
+        language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

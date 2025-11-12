@@ -1,0 +1,152 @@
+{% extends 'baseadmin.html' %}
+{% block title %}Panel de Administración{% endblock %}
+{% block body %}
+
+{# --- SweetAlert2: Toast para mensajes flash (éxito/aviso/error) --- #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "{{ 'success' if category=='success' else ('warning' if category=='warning' else 'info') }}",
+            title: "{{ message|escape }}"
+          });
+        });
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{# --- Función de confirmación para eliminar (reutilizable) --- #}
+<script>
+  function confirmarEliminacion(url) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¡No podrás revertir esto!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
+</script>
+
+<style>
+  /* Pills suaves para contadores */
+  .kpi-pill{
+    background: rgba(255,255,255,.9);
+    color:#111827;
+    border:1px solid rgba(0,0,0,.08);
+    padding:.35rem .6rem;
+    border-radius:.5rem;
+    font-weight:600;
+    display:inline-flex;
+    gap:.35rem;
+    align-items:center;
+  }
+  .kpi-pill i{ font-size:1rem; opacity:.75; }
+</style>
+
+<div class="container p-5 mt-3">
+  <h2 class="text-center alert alert-danger py-4">
+    Sistema de Gestión de Productos
+  </h2>
+
+  <div class="row g-3 text-center">
+
+    <!-- Perfil del Usuario -->
+    <div class="col-sm-4">
+      <div class="card h-100" style="background: linear-gradient(180deg, #355e3b, #7a9f7a, #f1eeda);">
+        <div class="row g-0 h-100">
+          <div class="col-md-8 d-flex">
+            <div class="card-body text-white d-flex flex-column justify-content-center">
+              <h5 class="card-title mb-2">Perfil del Usuario</h5>
+              <div class="mb-3">
+                <span class="kpi-pill">
+                  <i class="bi bi-people-fill"></i>
+                  Usuarios: <strong>{{ total_usuarios|default(0) }}</strong>
+                </span>
+              </div>
+              <a href="{{ url_for('listar') }}" class="btn btn-outline-success">Ver Detalles</a>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex align-items-center">
+            <img src="{{ url_for('static', filename='perfil.jpg') }}"
+                 class="img-fluid rounded-start" alt="Perfil del Usuario">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registrar Productos -->
+    <div class="col-sm-4">
+      <div class="card h-100" style="background: linear-gradient(180deg, #042bf1, #367cd9, #ffffff);">
+        <div class="row g-0 h-100">
+          <div class="col-md-8 d-flex">
+            <div class="card-body text-white d-flex flex-column justify-content-center">
+              <h5 class="card-title mb-2">Registrar Productos</h5>
+              <div class="mb-3">
+                <span class="kpi-pill">
+                  <i class="bi bi-box-seam-fill"></i>
+                  Productos: <strong>{{ total_productos|default(0) }}</strong>
+                </span>
+              </div>
+              <a href="{{ url_for('listar_productos_agregados') }}" class="btn btn-outline-success">Ver Detalles</a>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex align-items-center">
+            <a href="{{ url_for('listar_productos_agregados') }}">
+              <img src="{{ url_for('static', filename='registro.jpg') }}"
+                   class="img-fluid rounded-start" alt="Registrar Productos">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visualizar Productos -->
+    <div class="col-sm-4">
+      <div class="card h-100" style="background: linear-gradient(180deg, #0b235c, #3d85a9, #e0f7ff);">
+        <div class="row g-0 h-100">
+          <div class="col-md-8 d-flex">
+            <div class="card-body text-white d-flex flex-column justify-content-center">
+              <h5 class="card-title mb-2">Visualizar Productos</h5>
+              <div class="mb-3">
+                <span class="kpi-pill">
+                  <i class="bi bi-clipboard-data"></i>
+                  Total: <strong>{{ total_productos|default(0) }}</strong>
+                </span>
+              </div>
+              <a href="{{ url_for('listar_productos') }}" class="btn btn-outline-success">Ver Detalles</a>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex align-items-center">
+            <img src="{{ url_for('static', filename='visualizar.jpg') }}"
+                 class="img-fluid rounded-start" alt="Visualizar Productos">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

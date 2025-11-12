@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Acerca de{% endblock %}
+
+{% block contenido %}
+
+
+<!-- Encabezado con imagen -->
+<div class="container mt-5">
+  <div class="text-center">
+    <img src="{{ url_for('static', filename='jt-logo-monogram-luxury-emblem-260nw-2083672231.webp') }}" 
+         class="img-fluid rounded shadow-sm mb-4" 
+         alt="AkiraCode Academy - Tu camino ninja en la programación" 
+         style="max-height: 150px; object-fit: cover;">
+  </div>
+  <h2 class="text-center mb-4">ACERCA DE Relogería Tellez</h2>
+  <p class="text-center">
+    En <strong>Relogería Tellez</strong> Donde la elegancia y el tiempo se encuentran. Descubre la exclusividad de marcas como
+<strong>Rolex</strong>, <strong>Richard Mille</strong> y
+    <strong>Patek Philippe</strong>, con la asesoría y confianza que solo nosotros podemos ofrecer.
+  </p>
+</div>
+
+<!-- Misión, Visión, Objetivo -->
+<div class="container mt-5">
+  <div class="row text-center">
+    <div class="col-sm-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Misión</h5>
+          <p class="card-text">
+            Ofrecer a los amantes de la relojería piezas de las marcas más prestigiosas del mundo, <strong>como Rolex, Richard Mille y Patek Philippe,</strong>
+            ,combinando calidad, exclusividad y atención profesional,
+             para convertir cada reloj en un símbolo de elegancia y distinción.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Visión</h5>
+          <p class="card-text">
+           Consolidarnos como la relojería de referencia en la región, reconocida por la
+            <strong>excelencia en el servicio</strong>
+            , la autenticidad de nuestras piezas y la capacidad de crear relaciones duraderas con clientes que valoran el lujo, la precisión y el prestigio.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Objetivo</h5>
+          <p class="card-text">
+            Brindar a nuestros clientes <strong>relojes</strong>, de lujo auténticos y exclusivos, 
+            ofreciendo asesoría personalizada y un servicio de confianza que garantice una experiencia única en cada compra.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Valores -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Lo que nos define</h2>
+  <div class="row text-center">
+    <div class="col-sm-3">
+      <div class="card shadow-sm">
+        <img src="{{ url_for('static', filename='valor1.jpg') }}" class="card-img-top" alt="Innovación">
+        <div class="card-body">
+          <h5 class="card-title">Autenticidad</h5>
+          <p class="card-text">Garantizamos relojes 100% originales con certificaciones oficiales, ofreciendo seguridad y confianza en cada pieza adquirida.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card shadow-sm">
+        <img src="{{ url_for('static', filename='valor2.avif') }}" class="card-img-top" alt="Compromiso">
+        <div class="card-body">
+          <h5 class="card-title">Confianza</h5>
+          <p class="card-text">Brindamos transparencia en todo el proceso de compra, asegurando respaldo y tranquilidad en cada elección.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card shadow-sm">
+        <img src="{{ url_for('static', filename='valor3.jpg') }}" class="card-img-top" alt="Accesibilidad">
+        <div class="card-body">
+          <h5 class="card-title">Exclusividad</h5>
+          <p class="card-text">Ofrecemos colecciones únicas que reflejan lujo, elegancia y distinción, pensadas para marcar la diferencia.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card shadow-sm">
+        <img src="{{ url_for('static', filename='valor4.jpg') }}" class="card-img-top" alt="Eficiencia">
+        <div class="card-body">
+          <h5 class="card-title">Excelencia en el servicio</h5>
+          <p class="card-text">Atendemos con dedicación y asesoría personalizada, superando expectativas en cada experiencia con nuestros clientes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

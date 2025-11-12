@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <title>
+    {% block title %}{% endblock title %}
+    {% block titulo %}{% endblock %}
+  </title>
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Bootstrap CSS v5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.23.0/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.23.0/dist/sweetalert2.all.min.js"></script>
+
+  <!-- Tu CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+
+  <!-- DataTables (si usas tablas con DataTables) -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+
+  <style>
+    /* ====== Estética general del panel ====== */
+    body { background: linear-gradient(180deg,#eef7f1,#f5faf7); }
+
+    /* Navbar “glass” */
+    .glass-nav {
+      background: linear-gradient(92deg,#0b2239,#1b2b3a,#2b3f52) !important;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 6px 18px rgba(0,0,0,.12);
+    }
+    .glass-nav .navbar-brand { font-weight: 700; letter-spacing: .3px; }
+    .glass-nav .nav-link {
+      color: #e5eef7 !important;
+      opacity: .9;
+      transition: all .2s ease;
+    }
+    .glass-nav .nav-link:hover,
+    .glass-nav .nav-link:focus { opacity: 1; text-shadow: 0 0 6px rgba(255,255,255,.25); }
+    .glass-nav .dropdown-menu {
+      border-radius: .75rem;
+      border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      overflow: hidden;
+    }
+    .glass-nav .dropdown-item { padding:.55rem .9rem; }
+    .glass-nav .dropdown-item:hover { background: #e7f3ff; }
+
+    /* Botón salir */
+    .btn-outline-success {
+      --bs-btn-color:#d2f6e5; --bs-btn-border-color:#8fe0bb;
+      --bs-btn-hover-bg:#35a77a; --bs-btn-hover-border-color:#35a77a;
+    }
+
+    /* Footer */
+    footer .copy {
+      font-size:.95rem; color:#475569;
+      padding: .8rem 0 1.4rem;
+    }
+
+    /* Tooltips personalizados (opcional) */
+    .tooltip-soft .tooltip-inner {
+      background:#0b2239; color:#fff; font-weight:600;
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .tooltip-soft .tooltip-arrow::before { border-top-color:#0b2239 !important; }
+
+    /* Pequeños detalles */
+    .nav-username { color:#e2f3ff; font-weight:600; margin-left:.5rem; }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg glass-nav" data-bs-theme="dark">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2"
+           href="{{ url_for('admin') }}"
+           data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ir al panel principal">
+          <i class="bi bi-grid-1x2-fill"></i> Sistema
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav justify-content-center flex-grow-1">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin') }}"
+                 data-bs-toggle="tooltip" data-bs-placement="bottom" title="Dashboard">
+                <i class="bi bi-house-door"></i> Inicio
+              </a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                 aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Gestionar productos">
+                <i class="bi bi-box-seam"></i> Productos
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('listar_productos_agregados') }}"
+                     data-bs-toggle="tooltip" data-bs-placement="right" title="Registrar/gestionar productos">
+                    <i class="bi bi-plus-circle"></i> Agregar
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('listar_productos') }}"
+                     data-bs-toggle="tooltip" data-bs-placement="right" title="Ver listado de productos">
+                    <i class="bi bi-card-list"></i> Listar
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('perfil_admin') }}"
+                 data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver perfil del administrador">
+                <i class="bi bi-person-badge"></i> Perfil
+              </a>
+            </li>
+          </ul>
+
+          {% if session.get('nombre') %}
+            <span class="navbar-text nav-username" data-bs-toggle="tooltip" data-bs-placement="left"
+                  title="Sesión activa">
+              <i class="bi bi-person-circle me-1"></i>{{ session.get('nombre') }}
+            </span>
+          {% endif %}
+
+          <a class="btn btn-outline-success ms-2" href="{{ url_for('logout') }}"
+             data-bs-toggle="tooltip" data-bs-placement="left" title="Cerrar sesión de forma segura">
+            SALIR
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    {% block body %}{% endblock %}
+  </main>
+
+  <footer class="mt-4">
+    <div class="container text-center copy">
+      <hr>
+      <p class="mb-0">Copyright © 2025 - UNAN Managua</p>
+    </div>
+  </footer>
+
+  <!-- jQuery (necesario si utilizas DataTables jQuery) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+          integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap JS bundle (incluye Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+          crossorigin="anonymous"></script>
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+  <!-- Inicialización global de Tooltips -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const triggers = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      triggers.forEach(function (el) {
+        new bootstrap.Tooltip(el, { customClass: 'tooltip-soft' });
+      });
+    });
+  </script>
+
+  <!-- Confirmaciones y acciones comunes del panel -->
+  <script>
+    // Confirmar Cerrar Sesión
+    document.addEventListener('DOMContentLoaded', function () {
+      const logoutBtn = document.querySelector('a[href="{{ url_for("logout") }}"]');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          Swal.fire({
+            title: '¿Está seguro que desea cerrar el sistema?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, cerrar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = logoutBtn.href;
+            }
+          });
+        });
+      }
+    });
+
+    // Confirmación de eliminación (SweetAlert2)
+    function confirmarEliminacion(url) {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url;
+        }
+      });
+    }
+
+    // Delegación: captura clicks en botones .btn-eliminar
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-eliminar');
+      if (!btn) return;
+      e.preventDefault();
+      const url = btn.dataset.url;
+      if (url) confirmarEliminacion(url);
+    });
+  </script>
+
+</body>
+</html>

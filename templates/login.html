@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block titulo %} LOGIN {% endblock %}
+
+{% block contenido %}
+
+{# --- FLASH MESSAGES --- #}
+{% with msg = get_flashed_messages(with_categories=True) %}
+  {% if msg %}
+    {% for category, message in msg %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center"
+     style="background: radial-gradient(1200px 600px at 10% 10%, #e6f1ff 0%, #dfeff1 40%, #cfe6dd 100%);">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-xl-10">
+        <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 1.25rem;">
+          <div class="row g-0">
+
+            <!-- LADO IZQUIERDO -->
+            <div class="col-md-6 col-lg-5 d-none d-md-flex">
+              <div class="w-100 h-100 p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-center"
+                   style="background: linear-gradient(135deg, #3353ff, #172bf7);">
+                <img src="{{ url_for('static', filename='inicio.png') }}"
+                     alt="Panel de bienvenida"
+                     width="210" height="210"
+                     class="rounded-4 shadow-sm mb-4"
+                     data-bs-toggle="tooltip" data-bs-placement="bottom" title="Imagen ilustrativa del sistema">
+
+                <h2 class="fw-bold text-center mb-3">¡Bienvenido nuevamente!</h2>
+                <p class="text-center mb-4 opacity-75">¿Aún no tienes cuenta? Regístrate para empezar.</p>
+
+                <a href="{{ url_for('Registro') }}"
+                   class="btn btn-lg btn-register px-4"
+                   data-bs-toggle="tooltip" data-bs-placement="top" title="Crear una cuenta nueva">
+                  <i class="bi bi-person-plus me-2"></i>Registrarse
+                </a>
+              </div>
+            </div>
+
+            <!-- LADO DERECHO -->
+            <div class="col-md-6 col-lg-7 d-flex align-items-center" style="background:#f9fbff;">
+              <div class="w-100 p-4 p-lg-5">
+
+                <h2 class="fw-bold mb-4 text-center">Iniciar Sesión</h2>
+
+                <!-- Google -->
+                <div class="d-grid mb-4">
+                  <button class="btn btn-lg d-flex align-items-center justify-content-center btn-google"
+                          type="button"
+                          data-bs-toggle="tooltip" data-bs-placement="bottom" title="(Demo) Autenticación con Google">
+                    <img src="{{ url_for('static', filename='googleicon.png') }}" alt="Google"
+                         width="20" height="20" class="me-2">
+                    Iniciar sesión con Google
+                  </button>
+                </div>
+
+                <div class="d-flex align-items-center my-3">
+                  <hr class="flex-grow-1">
+                  <span class="px-3 text-muted small fw-semibold">o usa tu cuenta</span>
+                  <hr class="flex-grow-1">
+                </div>
+
+                <!-- FORM -->
+                <form action="{{ url_for('accesologin') }}" method="POST" class="needs-validation" novalidate>
+
+                  <!-- Email -->
+                  <div class="mb-3">
+                    <label for="email" class="form-label fw-semibold">Correo electrónico</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                      <input name="email" type="email" id="email" class="form-control form-control-lg"
+                             placeholder="tu@correo.com" required
+                             data-bs-toggle="tooltip" data-bs-placement="top" title="Ingresa tu correo registrado">
+                      <div class="invalid-feedback">Escribe un correo válido.</div>
+                    </div>
+                  </div>
+
+                  <!-- Password -->
+                  <div class="mb-3">
+                    <label for="password" class="form-label fw-semibold">Contraseña</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                      <input name="password" type="password" id="password"
+                             class="form-control form-control-lg"
+                             placeholder="••••••••" minlength="4" required
+                             data-bs-toggle="tooltip" data-bs-placement="top" title="Ingresa tu contraseña">
+                      <button class="btn btn-outline-secondary" type="button" id="togglePass"
+                              data-bs-toggle="tooltip" data-bs-placement="left" title="Mostrar/Ocultar contraseña">
+                        <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                      </button>
+                      <div class="invalid-feedback">La contraseña es requerida.</div>
+                    </div>
+                    <div class="form-text">
+                      ¿La olvidaste? <span class="text-muted" data-bs-toggle="tooltip"
+                        title="Función en preparación. Contacta al administrador.">Recuperación no disponible</span>
+                    </div>
+                  </div>
+
+                  <!-- Opciones -->
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="remember"
+                             data-bs-toggle="tooltip" data-bs-placement="right" title="Mantener sesión iniciada en este dispositivo">
+                      <label class="form-check-label" for="remember">Recordarme</label>
+                    </div>
+                    <span class="small text-muted" data-bs-toggle="tooltip" title="Área protegida del sistema">
+                      <i class="bi bi-shield-lock"></i> Seguridad activa
+                    </span>
+                  </div>
+
+                  <!-- Submit -->
+                  <div class="d-grid">
+                    <button class="btn btn-lg btn-login" type="submit"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Entrar al sistema">
+                      <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                    </button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Botón Registrarse */
+.btn-register{
+  background: linear-gradient(135deg,#26a269,#1f945d) !important;
+  color:#fff !important; border:none !important;
+  transition: transform .08s ease-in-out, box-shadow .15s;
+}
+.btn-register:hover{ box-shadow:0 8px 18px rgba(0,0,0,.15); }
+.btn-register:active{ transform: scale(.97); }
+
+/* Botón Google */
+.btn-google{
+  background:#fff !important; color:#111 !important; border:1px solid rgba(0,0,0,.08) !important;
+  transition: transform .08s ease-in-out, box-shadow .15s;
+}
+.btn-google:hover{ box-shadow:0 8px 18px rgba(0,0,0,.12); }
+.btn-google:active{ transform: scale(.97); }
+
+/* Botón Iniciar Sesión */
+.btn-login{
+  background: linear-gradient(135deg,#177af3,#3c4ff3) !important;
+  color:#fff !important; border:none !important;
+  transition: transform .08s ease-in-out, box-shadow .15s;
+}
+.btn-login:hover{ box-shadow:0 10px 22px rgba(23,122,243,.35); }
+.btn-login:active{ transform: scale(.98); }
+</style>
+
+<!-- Init tooltips + toggle password (si base.html no los inicializa, los activamos aquí) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Tooltips
+    const triggers = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    triggers.forEach(el => new bootstrap.Tooltip(el, { customClass: 'tooltip-soft' }));
+
+    // Mostrar / ocultar contraseña
+    const pass = document.getElementById('password');
+    const btn = document.getElementById('togglePass');
+    const icon = document.getElementById('toggleIcon');
+    if (pass && btn) {
+      btn.addEventListener('click', () => {
+        const isPass = pass.getAttribute('type') === 'password';
+        pass.setAttribute('type', isPass ? 'text' : 'password');
+        icon.classList.toggle('bi-eye');
+        icon.classList.toggle('bi-eye-slash');
+      });
+    }
+
+    // Validación simple de Bootstrap
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault(); event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  });
+</script>
+
+{% endblock %}
