@@ -12,3 +12,5 @@ print(f"Hashed password: {hash_password}")
 #verificar la contraseña
 contraseña_interna = bcrypt.check_password_hash(hash_password, password)
 print(f"contraseña es correcta;? {contraseña_interna}")
+
+##hola comentario de prueba
