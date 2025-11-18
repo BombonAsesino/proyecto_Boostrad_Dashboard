@@ -191,7 +191,7 @@ def logout():
     return redirect(url_for('login'))
 
 # ------------------------- Panel protegido ----------------------
-@app.route('/admin')
+@app.route('/admin', methods=['GET', 'POST'] ) 
 def admin():
     if session.get('id_rol') != 1:
         flash('Acceso restringido al administrador', 'warning')
