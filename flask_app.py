@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect, session, f
 from flask_mysqldb import MySQL
 from passlib.hash import pbkdf2_sha256
 import csv, io
-from datetime import datetime
+from datetime import datetime, date   # importamos datetime y date
 
 # ------------------------- Configuración -------------------------
 app = Flask(__name__)
@@ -17,13 +17,25 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
+# ===== Ajuste de zona horaria para cada request (UTC-6, Nicaragua) =====
+@app.before_request
+def set_mysql_timezone():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SET time_zone = '-06:00';")
+        cur.close()
+    except Exception:
+        # Si por alguna razón falla, no rompemos la app
+        pass
+# =======================================================================
+
 # ------------------------- Exportaciones CSV ----------------------------
 def _csv_response(buffer_str: str, filename: str) -> Response:
     """Devuelve un Response con CSV descargable (UTF-8 + BOM para Excel)."""
     return Response(
         buffer_str,
         mimetype="text/csv; charset=utf-8",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+        headers={"Content-Disposition": f'attachment; filename=\"{filename}\"'}
     )
 
 @app.route('/export/usuarios.csv')
@@ -191,7 +203,7 @@ def logout():
     return redirect(url_for('login'))
 
 # ------------------------- Panel protegido ----------------------
-@app.route('/admin', methods=['GET', 'POST'] ) 
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if session.get('id_rol') != 1:
         flash('Acceso restringido al administrador', 'warning')
@@ -426,8 +438,6 @@ def editar_producto(id):
         flash('Acceso restringido al administrador', 'warning')
         return redirect(url_for('login'))
 
-    cur = mysql.connection.cursor()
-
     if request.method == 'POST':
         nombre      = request.form.get('nombre', '').strip()
         precio      = request.form.get('precio', type=float)
@@ -440,6 +450,13 @@ def editar_producto(id):
                 fecha_dt = datetime.strptime(fecha_str, '%Y-%m-%d')
             except ValueError:
                 fecha_dt = None
+
+        # 🔒 VALIDACIÓN: NO PERMITIR FECHAS FUTURAS
+        if fecha_dt is not None and fecha_dt.date() > date.today():
+            flash('La fecha no puede ser mayor a la fecha actual.', 'warning')
+            return redirect(url_for('editar_producto', id=id))
+
+        cur = mysql.connection.cursor()
 
         if fecha_dt is None:
             cur.execute("""
@@ -460,6 +477,8 @@ def editar_producto(id):
         flash('Producto actualizado', 'success')
         return redirect(url_for('listar_productos'))
 
+    # GET: mostrar formulario de edición
+    cur = mysql.connection.cursor()
     cur.execute("SELECT id, nombre, precio, descripcion, fecha FROM producto WHERE id=%s", (id,))
     prod = cur.fetchone()
     cur.close()
@@ -488,8 +507,15 @@ def inject_totals():
     except Exception as e:
         print("inject_totals error:", e)
     finally:
-        if cur: cur.close()
-    return dict(total_usuarios=total_usuarios, total_productos=total_productos)
+        if cur:
+            cur.close()
+
+    # también inyectamos la fecha actual (para usarla como max en inputs date)
+    return dict(
+        total_usuarios=total_usuarios,
+        total_productos=total_productos,
+        fecha_hoy=date.today().strftime('%Y-%m-%d')
+    )
 
 # ------------------------- Arranque -----------------------------
 if __name__ == '__main__':
